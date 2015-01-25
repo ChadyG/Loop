@@ -1,4 +1,4 @@
-site: http://192.168.1.7
-api_suffix: /DeviceHive.API
+site: https://api.everybitloop.com
+api_suffix: /Everybit.Loop.API
 client_id: Systematic Consulting Group
 secret: abc123

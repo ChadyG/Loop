@@ -11,6 +11,7 @@ module EveryBit
     
     def register
       puts "register"
+      ApiBase.client.put("/device/#{self.id}", self.to_json)
     end
   end
 end

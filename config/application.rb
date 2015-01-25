@@ -21,11 +21,6 @@ module EveryBit
       @service_config = service_config
       @device_config = device_config
       
-      #@service = RESTfulClientService.new(
-      #  @device_config['device_id'], 
-      #  @device_config['device_key'], 
-      #  @device_config['site_url'])
-      
       #Initialize Device
       @device = Device.new(
         id: @device_config['device_id'],
@@ -34,8 +29,12 @@ module EveryBit
       @client = RESTfulClient.new(
         @service_config['client_id'],
         @service_config['secret'],
-        { site: @service_config['site'] + @service_config['api_suffix'] }
+        { 
+          site: @service_config['site'],
+          api_suffix: @service_config['api_suffix'] 
+        }
       )
+      @client.device = @device
       EveryBit::ApiBase.client = @client
       
       @device.register
@@ -43,12 +42,12 @@ module EveryBit
       #Initialize profiles in apps directory
       @profiles = {}
       Dir[Loop.root.join('app','profiles','*.rb')].each { |file|
-        puts "each #{file}"
+        #puts "each #{file}"
         require Loop.root.join(file)
         file_name = File.basename(file, ".rb")
         route_name = file_name.gsub(/^[a-z0-9]|_[a-z0-9]/){ |a| a.downcase }.gsub(/_/,"")
         class_name = route_name.capitalize
-        puts "adding /#{route_name} => #{class_name}"
+        #puts "adding /#{route_name} => #{class_name}"
         @profiles["/"+ route_name] = Module.const_get(class_name).new
       }
       
