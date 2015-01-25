@@ -1,5 +1,5 @@
 module EveryBit
-  class ApiBase > Hashie::Dash
+  class ApiBase < Hashie::Dash
     include Hashie::Extensions::Coercion
     
     class << self
@@ -12,7 +12,7 @@ module EveryBit
       
       def has_many(model)
         property model
-        coerce_value model, Base[Kernel.const_get(model.to_s.capitalize)]
+        coerce_value model, ApiBase[Kernel.const_get(model.to_s.capitalize)]
       end
       
       # Connection

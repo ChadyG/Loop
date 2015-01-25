@@ -1,6 +1,8 @@
 source 'https://rubygems.org'
 
-gem 'active_support'
+gem 'activesupport'
+
+gem 'rack'
 
 gem 'oauth2'
 gem 'faraday'

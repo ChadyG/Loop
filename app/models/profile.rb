@@ -1,5 +1,5 @@
 module EveryBit
-  class Profile > ApiBase
+  class Profile < ApiBase
     property :id, required: true
     property :name, required: true, message: 'must be set.'
     property :code

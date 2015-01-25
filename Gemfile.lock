@@ -1,9 +1,19 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    activesupport (4.2.0)
+      i18n (~> 0.7)
+      json (~> 1.7, >= 1.7.7)
+      minitest (~> 5.1)
+      thread_safe (~> 0.3, >= 0.3.4)
+      tzinfo (~> 1.1)
     faraday (0.9.1)
       multipart-post (>= 1.2, < 3)
+    hashie (3.3.2)
+    i18n (0.7.0)
+    json (1.8.2)
     jwt (1.2.0)
+    minitest (5.5.1)
     multi_json (1.10.1)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
@@ -14,10 +24,16 @@ GEM
       multi_xml (~> 0.5)
       rack (~> 1.2)
     rack (1.6.0)
+    thread_safe (0.3.4)
+    tzinfo (1.2.2)
+      thread_safe (~> 0.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  activesupport
   faraday
+  hashie
   oauth2
+  rack

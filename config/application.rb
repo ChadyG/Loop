@@ -1,24 +1,16 @@
 require 'rubygems'
 require 'bundler/setup'
-#require 'rails/all'
-#require 'active_support'
-
+require 'yaml'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
-Bundler.require(:default, Rails.env)
-
-
-#load our libs
-require File.expand_path('../lib', __FILE__)
-Dir['../app/models/*.rb'].each {|file| require file }
-Dir['../models/service/*.rb'].each {|file| require file }
+Bundler.require(:default)
 
 module EveryBit
   class Loop
     class << self
       def root
-        Pathname.new( File.dirname(__FILE__) + "..")
+        Pathname.new( File.expand_path("../..", __FILE__) )
       end
     end
   end
@@ -29,10 +21,10 @@ module EveryBit
       @service_config = service_config
       @device_config = device_config
       
-      @service = RESTfulClientService.new(
-        @device_config['device_id'], 
-        @device_config['device_key'], 
-        @device_config['site_url'])
+      #@service = RESTfulClientService.new(
+      #  @device_config['device_id'], 
+      #  @device_config['device_key'], 
+      #  @device_config['site_url'])
       
       #Initialize Device
       @device = Device.new(
@@ -50,11 +42,22 @@ module EveryBit
       
       #Initialize profiles in apps directory
       @profiles = {}
-      Dir[File.expand_path('../app/profiles', __FILE__)].each { |file|
-        
+      Dir[Loop.root.join('app','profiles','*.rb')].each { |file|
+        puts "each #{file}"
+        require Loop.root.join(file)
+        file_name = File.basename(file, ".rb")
+        route_name = file_name.gsub(/^[a-z0-9]|_[a-z0-9]/){ |a| a.downcase }.gsub(/_/,"")
+        class_name = route_name.capitalize
+        puts "adding /#{route_name} => #{class_name}"
+        @profiles["/"+ route_name] = Module.const_get(class_name).new
       }
       
       #set up Rack server to listen in to our physical devices
+      @app = Rack::URLMap.new(@profiles)
+    end
+    
+    def call(env)
+      @app.call(env)
     end
     
 private
@@ -82,3 +85,9 @@ private
     
   end
 end
+
+
+#load our libs
+Dir['lib/*.rb'].each {|file| require EveryBit::Loop.root.join(file) }
+Dir['app/models/*.rb'].each {|file| require EveryBit::Loop.root.join(file) }
+Dir['app/service/*.rb'].each {|file| require EveryBit::Loop.root.join(file) }

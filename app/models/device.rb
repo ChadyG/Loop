@@ -7,10 +7,10 @@ module EveryBit
     property :data
     property :device_type
     #profile will just be parameters and command callbacks
-    has_many :profile
+    #has_many :profile
     
     def register
-      
+      puts "register"
     end
   end
 end

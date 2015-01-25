@@ -52,7 +52,7 @@ private
       if refresh or @token.try(:access_token).nil?
         @token = oauth_client.client_credentials.get_token
       end
-      return not @token.try(:token).nil?
+      return !@token.try(:token).nil?
     end
     
     def retrieve_access_token_if_expired(response)
