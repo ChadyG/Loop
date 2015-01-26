@@ -1,4 +1,4 @@
-site: https://api.everybitloop.com
+site: http://192.168.1.13
 api_suffix: /Everybit.Loop.API
-client_id: Systematic Consulting Group
+client_id: SystematicGroup
 secret: abc123
