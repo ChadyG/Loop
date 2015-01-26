@@ -17,13 +17,12 @@ module EveryBit
       @secret = client_secret
       @site = opts.delete(:site)
       @site_suffix = opts.delete(:api_suffix)
-      ssl = opts.delete(:ssl)
-      @options = {:token_url        => '/token',
+      @options = {:site             => @site + @site_suffix,
+                  :token_url        => @site + @site_suffix + '/token',
                   :connection_opts  => {},
                   :connection_build => block,
                   :max_redirects    => 5,
                   :raise_errors     => true}.merge(opts)
-      @options[:connection_opts][:ssl] = ssl if ssl
       @oauth_client = nil
       @token = nil
       
@@ -86,7 +85,8 @@ private
     def oauth_client
       return @oauth_client unless @oauth_client.nil?
       site = @site + @site_suffix
-      @oauth_client = OAuth2::Client.new(@id, @secret, site: site, token_url: site + @options[:token_url])
+      
+      @oauth_client = OAuth2::Client.new(@id, @secret, @options)
     end
     
     def retrieve_access_token(refresh = false)
